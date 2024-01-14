@@ -10,6 +10,8 @@ Copyright (c) 2024 led-mirage
 
 ## スクリーンショット
 
+<img width="194" alt="screenshot" src="https://github.com/led-mirage/CoeiroClip/assets/139528700/0711d071-22b2-49da-b29b-235bd96ddae8">
+
 ## 機能
 
 - クリップボード監視の開始と停止
