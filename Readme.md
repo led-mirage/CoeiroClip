@@ -6,7 +6,9 @@ Copyright (c) 2024 led-mirage
 
 クリップボードに貼り付けられたテキストを COEIROINK で読み上げるアプリです。
 
-[VoivoClip](https://github.com/led-mirage/VoivoClip) の COEIROINK 版です。
+[COEIROINK公式ページ](https://coeiroink.com/)
+
+このソフトウェアは、[VoivoClip](https://github.com/led-mirage/VoivoClip) の COEIROINK 版です。
 
 ## スクリーンショット
 
