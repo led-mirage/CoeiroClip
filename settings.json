@@ -1,0 +1,8 @@
+{
+    "file_ver": 1,
+    "speaker_id": 0,
+    "speed_scale": 1.2,
+    "pitch_scale": 0.0,
+    "coeiroink_server": "http://127.0.0.1:50032",
+    "coeiroink_install_path": ""
+}
