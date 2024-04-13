@@ -39,7 +39,7 @@ Copyright (c) 2024 led-mirage
 
 以下のリンクから CoeiroClip.ZIP をダウンロードして、作成したフォルダに展開してください。
 
-https://github.com/led-mirage/CoeiroClip/releases/tag/v0.1.0
+https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.0
 
 #### 3. 実行
 
@@ -111,6 +111,42 @@ COEIROINKを自動起動するために使用します。COEIROINKの実行フ�
 "coeiroink_install_path": "C:/Program Files/COEIROINK_GPU/COEIROINKv2.exe"
 ```
 
+#### ✨ replacements（既定値 []）
+
+読み上げるテキストの置換設定です。置換対象（pattern）を正規表現で、置換後の文字列（replacement）を通常の文字列で指定します。
+
+例えば括弧内のテキストと、URLを除去して読み上げたい場合は、以下のように設定します。置換パターンは複数個記載でき、上から順に処理されます。
+
+```json
+    "replacements": [
+        {
+            "pattern": "\\(.*?\\)|（.*?）",
+            "replacement": ""
+        },
+        {
+            "pattern": "https?:\\/\\/(?:[\\w\\-\\.]+)+(?:[\\w\\.\\/\\?%&=]*)?",
+            "replacement": ""
+        }
+    ]
+```
+
+## 注意事項
+
+### ⚡ ウィルス対策ソフトの誤認問題
+
+このプログラムの実行ファイル（CoeiroClip.exe、CoeiroClipNC.exe）は PyInstaller というライブラリを使って作成していますが、ウィルス対策ソフトにマルウェアと誤認されることがあります。
+
+もちろん、このアプリに悪意のあるプログラムは入っていませんが、気になる人は上記の「Pythonで実行する方法」で実行してください。
+
+誤認問題が解決できるのが一番いいのですが、いい方法が見つかっていないので申し訳ありませんがご了承ください。
+
+VirusTotalでのチェック結果は以下の通りです（2024/04/13 v0.2.0）
+
+- CoeiroClip.exe … 70個中4個のアンチウィルスエンジンで検出
+- CoeiroClipNC.exe … 70個中6個のアンチウィルスエンジンで検出
+
+<img src="doc/virustotal_0.2.0.png" width="600">
+
 ## 使用しているライブラリ
 
 ### 🔖 requests 2.31.0
@@ -144,3 +180,7 @@ COEIROINKを自動起動するために使用します。COEIROINKの実行フ�
 ### 0.1.0 (2024/01/14)
 
 - ファーストリリース
+
+### 0.2.0 (2024/04/13)
+
+- 置換文字列を設定できるように変更（正規表現で指定）

@@ -13,7 +13,7 @@ import threading
 from coeiroink_api import CoeiroinkAPI
 
 class Settings:
-    FILE_VER = 1
+    FILE_VER = 2
 
     def __init__(self, setting_file_path):
         self._setting_file_path = setting_file_path
@@ -26,6 +26,7 @@ class Settings:
         self._pitch_scale = 0.0
         self._coeiroink_server = CoeiroinkAPI.DEFAULT_SERVER
         self._coeiroink_install_path = ""
+        self._replacements = []
 
     # 話者ID
     def get_speaker_id(self):
@@ -72,6 +73,15 @@ class Settings:
         with self._lock:
             self._coeiroink_install_path = install_path
 
+    # 置換設定
+    def get_replacements(self):
+        with self._lock:
+            return self._replacements
+        
+    def set_replacements(self, replacements):
+        with self._lock:
+            self._replacements = replacements
+
     # 設定ファイルを保存する
     def save(self):
         with self._lock:
@@ -86,6 +96,7 @@ class Settings:
             setting["pitch_scale"] = self._pitch_scale
             setting["coeiroink_server"] = self._coeiroink_server
             setting["coeiroink_install_path"] = self._coeiroink_install_path
+            setting["replacements"] = self._replacements
             json.dump(setting, file, ensure_ascii=False, indent=4)
 
     # 設定ファイルを読み込む
@@ -104,6 +115,7 @@ class Settings:
                 self._pitch_scale = setting.get("pitch_scale", self._pitch_scale)
                 self._coeiroink_server = setting.get("coeiroink_server", self._coeiroink_server)
                 self._coeiroink_install_path = setting.get("coeiroink_install_path", self._coeiroink_install_path)
+                self._replacements = setting.get("replacements", self._replacements)
 
         if file_ver < Settings.FILE_VER:
             self._save_nolock()
