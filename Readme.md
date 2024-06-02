@@ -39,7 +39,7 @@ Copyright (c) 2024 led-mirage
 
 以下のリンクから CoeiroClip.ZIP をダウンロードして、作成したフォルダに展開してください。
 
-https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.0
+https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.1
 
 #### 3. 実行
 
@@ -142,10 +142,10 @@ COEIROINKを自動起動するために使用します。COEIROINKの実行フ�
 
 VirusTotalでのチェック結果は以下の通りです（2024/04/13 v0.2.0）
 
-- CoeiroClip.exe … 70個中4個のアンチウィルスエンジンで検出
-- CoeiroClipNC.exe … 70個中6個のアンチウィルスエンジンで検出
+- CoeiroClip.exe … 74個中5個のアンチウィルスエンジンで検出
+- CoeiroClipNC.exe … 74個中7個のアンチウィルスエンジンで検出
 
-<img src="doc/virustotal_0.2.0.png" width="600">
+<img src="doc/virustotal_0.2.1.png" width="600">
 
 ## 使用しているライブラリ
 
@@ -184,3 +184,7 @@ VirusTotalでのチェック結果は以下の通りです（2024/04/13 v0.2.0�
 ### 0.2.0 (2024/04/13)
 
 - 置換文字列を設定できるように変更（正規表現で指定）
+
+### 0.2.1 (2024/06/02)
+
+- 正規表現で置換する処理を微修正
