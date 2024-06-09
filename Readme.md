@@ -25,7 +25,7 @@ Copyright (c) 2024 led-mirage
 
 - Windows 11 Pro 23H2
 - Python 3.12.0
-- COEIROINK v2.2.1
+- COEIROINK v2.3.4
 
 ## 実行方法
 
@@ -39,7 +39,7 @@ Copyright (c) 2024 led-mirage
 
 以下のリンクから CoeiroClip.ZIP をダウンロードして、作成したフォルダに展開してください。
 
-https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.2
+https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.3
 
 #### 3. 実行
 
@@ -86,6 +86,9 @@ python application.py
 ### ⚙️ アプリケーション設定ファイル（オプション）
 
 `settings.json`ファイルにはこのアプリの設定情報が記載されています。
+
+※プログラム引数で設定ファイル名を渡すことで、使用する設定ファイルを切り替えることができます。  
+例）CoeiroClip --setting my_settings.json
 
 #### ✨ speaker_id（既定値 0）
 
@@ -140,16 +143,16 @@ COEIROINKを自動起動するために使用します。COEIROINKの実行フ�
 
 誤認問題が解決できるのが一番いいのですが、いい方法が見つかっていないので申し訳ありませんがご了承ください。
 
-VirusTotalでのチェック結果は以下の通りです（2024/06/08 v0.2.2）
+VirusTotalでのチェック結果は以下の通りです（2024/06/09 v0.2.3）
 
 - CoeiroClip.exe … 72個中5個のアンチウィルスエンジンで検出
-- CoeiroClipNC.exe … 72個中8個のアンチウィルスエンジンで検出
+- CoeiroClipNC.exe … 72個中7個のアンチウィルスエンジンで検出
 
-<img src="doc/virustotal_0.2.1.png" width="600">
+<img src="doc/virustotal_0.2.3.png" width="600">
 
 ## 使用しているライブラリ
 
-### 🔖 requests 2.31.0
+### 🔖 requests 2.32.3
 
 ホームページ： https://requests.readthedocs.io/en/latest/  
 ライセンス：[Apache License 2.0](https://github.com/psf/requests/blob/main/LICENSE) 
@@ -164,7 +167,7 @@ VirusTotalでのチェック結果は以下の通りです（2024/06/08 v0.2.2�
 ホームページ： https://people.csail.mit.edu/hubert/pyaudio/  
 ライセンス：[MIT License](https://people.csail.mit.edu/hubert/pyaudio/)
 
-### 🔖 Pillow 10.2.0
+### 🔖 Pillow 10.3.0
 
 ホームページ： https://python-pillow.org/  
 ライセンス：[HPND License](https://raw.githubusercontent.com/python-pillow/Pillow/main/LICENSE)
@@ -192,3 +195,10 @@ VirusTotalでのチェック結果は以下の通りです（2024/06/08 v0.2.2�
 ### 0.2.2 (2024/06/08)
 
 - 再生環境による文末の音声途切れ問題を軽減するため、再生終了後に0.2秒間の待機時間を追加
+
+### 0.2.3 (2024/06/09)
+
+- プログラム引数で設定ファイル名を渡せるように変更
+- requestsのバージョンを2.32.3に更新
+- pillowのバージョンを10.3.0に更新
+- PyInstallerのバージョンを6.8.0に更新

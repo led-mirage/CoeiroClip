@@ -6,6 +6,7 @@
 # このソースコードは MITライセンス の下でライセンスされています。
 # ライセンスの詳細については、このプロジェクトのLICENSEファイルを参照してください。
 
+import argparse
 import sys
 from tkinter import messagebox
 
@@ -15,7 +16,7 @@ from coeiroink_api import CoeiroinkAPI
 from coeiroink_speaker import CoeiroinkSpeaker
 
 APP_NAME = "CoeiroClip"
-APP_VERSION = "0.2.2"
+APP_VERSION = "0.2.3"
 COPYRIGHT = "Copyright 2024 led-mirage"
 
 SETTING_FILE = "settings.json"
@@ -29,9 +30,13 @@ class Application:
 
     # 開始
     def start(self):
+        parser = argparse.ArgumentParser(description=f"{APP_NAME} {APP_VERSION}")
+        parser.add_argument("--setting", type=str, default=SETTING_FILE, help="設定ファイル名")
+        args = parser.parse_args()
+
         self.print_apptitle()
 
-        self.settings = Settings(SETTING_FILE)
+        self.settings = Settings(args.setting)
         self.settings.load()
 
         CoeiroinkAPI.server = self.settings.get_coeiroink_server()
