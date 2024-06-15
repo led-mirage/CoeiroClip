@@ -78,7 +78,22 @@ pip install -r requirements.txt
 COEIROINK を起動したのち、以下のコマンドを実行するとアプリが起動します。  
 
 ```bash
-python application.py
+python src\application.py
+```
+
+#### 6. 起動用のバッチファイル（オプション）
+
+以下のような起動用のバッチファイルを用意しておくと便利です。
+
+```bat
+start pythonw src\application.py
+```
+
+Pythonの仮想環境を使用している場合は、以下の例のようにすればOKです。
+
+```bat
+call venv\scripts\activate
+start pythonw src\application.py
 ```
 
 ## 設定
