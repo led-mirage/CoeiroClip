@@ -16,8 +16,8 @@ from coeiroink_api import CoeiroinkAPI
 from coeiroink_speaker import CoeiroinkSpeaker
 
 APP_NAME = "CoeiroClip"
-APP_VERSION = "0.2.3"
-COPYRIGHT = "Copyright 2024 led-mirage"
+APP_VERSION = "0.2.4"
+COPYRIGHT = "Copyright 2024-2025 led-mirage"
 
 SETTING_FILE = "settings.json"
 
