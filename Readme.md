@@ -1,6 +1,10 @@
 # <img src="image/application.ico" width="48"> CoeiroClip
 
-Copyright (c) 2024 led-mirage
+[![GitHub All Releases](https://img.shields.io/github/downloads/led-mirage/CoeiroClip/total?color=blue)](https://github.com/led-mirage/CoeiroClip/releases)
+[![GitHub release](https://img.shields.io/github/v/release/led-mirage/CoeiroClip?color=blue)](https://github.com/led-mirage/CoeiroClip/releases)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+Copyright (c) 2024-2025 led-mirage
 
 ## 概要
 
@@ -39,7 +43,7 @@ Copyright (c) 2024 led-mirage
 
 以下のリンクから CoeiroClip.ZIP をダウンロードして、作成したフォルダに展開してください。
 
-https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.3
+https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.4
 
 #### 3. 実行
 
@@ -158,16 +162,16 @@ COEIROINKを自動起動するために使用します。COEIROINKの実行フ�
 
 誤認問題が解決できるのが一番いいのですが、いい方法が見つかっていないので申し訳ありませんがご了承ください。
 
-VirusTotalでのチェック結果は以下の通りです（2024/06/09 v0.2.3）
+VirusTotalでのチェック結果は以下の通りです（2025/06/15 v0.2.4）
 
-- CoeiroClip.exe … 72個中5個のアンチウィルスエンジンで検出
-- CoeiroClipNC.exe … 72個中7個のアンチウィルスエンジンで検出
+- CoeiroClip.exe … [72個中6個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/969f5e7e83eb1b5dfddbccbc5210966debee63b335891649d32972a922dc4d9c?nocache=1)
+- CoeiroClipNC.exe … [72個中7個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/65fc5a62725cd4e1a0adb80608b568ce4cdf785d5584b1167a6a61c210ae89f1?nocache=1)
 
-<img src="doc/virustotal_0.2.3.png" width="600">
+<img src="doc/virustotal_0.2.4.png" width="600">
 
 ## 使用しているライブラリ
 
-### 🔖 requests 2.32.3
+### 🔖 requests 2.32.4
 
 ホームページ： https://requests.readthedocs.io/en/latest/  
 ライセンス：[Apache License 2.0](https://github.com/psf/requests/blob/main/LICENSE) 
@@ -217,3 +221,7 @@ VirusTotalでのチェック結果は以下の通りです（2024/06/09 v0.2.3�
 - requestsのバージョンを2.32.3に更新
 - pillowのバージョンを10.3.0に更新
 - PyInstallerのバージョンを6.8.0に更新
+
+### 0.2.4 (2024/06/15)
+
+- requestsのバージョンを2.32.4に更新
