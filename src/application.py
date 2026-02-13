@@ -2,7 +2,7 @@
 #
 # アプリケーションクラス
 #
-# Copyright (c) 2024 led-mirage
+# Copyright (c) 2024-2026 led-mirage
 # このソースコードは MITライセンス の下でライセンスされています。
 # ライセンスの詳細については、このプロジェクトのLICENSEファイルを参照してください。
 
@@ -16,8 +16,8 @@ from coeiroink_api import CoeiroinkAPI
 from coeiroink_speaker import CoeiroinkSpeaker
 
 APP_NAME = "CoeiroClip"
-APP_VERSION = "0.2.4"
-COPYRIGHT = "Copyright 2024-2025 led-mirage"
+APP_VERSION = "0.2.5"
+COPYRIGHT = "Copyright 2024-2026 led-mirage"
 
 SETTING_FILE = "settings.json"
 
