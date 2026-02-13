@@ -1,4 +1,4 @@
 requests==2.32.4
 pyperclip==1.8.2
 PyAudio==0.2.14
-pillow==10.3.0
+pillow==12.1.1

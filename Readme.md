@@ -4,7 +4,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/led-mirage/CoeiroClip?color=blue)](https://github.com/led-mirage/CoeiroClip/releases)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Copyright (c) 2024-2025 led-mirage
+Copyright (c) 2024-2026 led-mirage
 
 ## 概要
 
@@ -27,7 +27,7 @@ Copyright (c) 2024-2025 led-mirage
 
 ## 動作確認環境
 
-- Windows 11 Pro 23H2
+- Windows 11 Pro 25H2
 - Python 3.12.0
 - COEIROINK v2.3.4
 
@@ -43,7 +43,7 @@ Copyright (c) 2024-2025 led-mirage
 
 以下のリンクから CoeiroClip.ZIP をダウンロードして、作成したフォルダに展開してください。
 
-https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.4
+https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.5
 
 #### 3. 実行
 
@@ -162,12 +162,12 @@ COEIROINKを自動起動するために使用します。COEIROINKの実行フ�
 
 誤認問題が解決できるのが一番いいのですが、いい方法が見つかっていないので申し訳ありませんがご了承ください。
 
-VirusTotalでのチェック結果は以下の通りです（2025/06/15 v0.2.4）
+VirusTotalでのチェック結果は以下の通りです（2026/02/13 v0.2.5）
 
-- CoeiroClip.exe … [72個中6個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/969f5e7e83eb1b5dfddbccbc5210966debee63b335891649d32972a922dc4d9c?nocache=1)
-- CoeiroClipNC.exe … [72個中7個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/65fc5a62725cd4e1a0adb80608b568ce4cdf785d5584b1167a6a61c210ae89f1?nocache=1)
+- CoeiroClip.exe … [72個中2個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/515c2c1400eaa587b3badcf44e2a2ab47f088139976378cb63f265b44d26ac99/detection)
+- CoeiroClipNC.exe … [72個中3個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/02be74b66ab461b1b55cf443346804dbba189f97c4b8a53bf1d0ac49339487fa/detection)
 
-<img src="doc/virustotal_0.2.4.png" width="600">
+<img src="doc/virustotal_0.2.5.png" width="600">
 
 ## 使用しているライブラリ
 
@@ -186,14 +186,14 @@ VirusTotalでのチェック結果は以下の通りです（2025/06/15 v0.2.4�
 ホームページ： https://people.csail.mit.edu/hubert/pyaudio/  
 ライセンス：[MIT License](https://people.csail.mit.edu/hubert/pyaudio/)
 
-### 🔖 Pillow 10.3.0
+### 🔖 Pillow 12.1.1
 
 ホームページ： https://python-pillow.org/  
 ライセンス：[HPND License](https://raw.githubusercontent.com/python-pillow/Pillow/main/LICENSE)
 
 ## ライセンス
 
-© 2024 led-mirage
+© 2024-2026 led-mirage
 
 本アプリケーションは [MITライセンス](https://opensource.org/licenses/MIT) の下で公開されています。詳細については、プロジェクトに含まれる LICENSE ファイルを参照してください。
 
@@ -222,6 +222,11 @@ VirusTotalでのチェック結果は以下の通りです（2025/06/15 v0.2.4�
 - pillowのバージョンを10.3.0に更新
 - PyInstallerのバージョンを6.8.0に更新
 
-### 0.2.4 (2024/06/15)
+### 0.2.4 (2025/06/15)
 
 - requestsのバージョンを2.32.4に更新
+
+### 0.2.5 (2026/02/13)
+
+- pillowのバージョンを12.1.1に更新（CVE-2026-25990対応）
+- PyInstallerのバージョンを6.16.0に更新
