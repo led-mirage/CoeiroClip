@@ -43,7 +43,7 @@ Copyright (c) 2024-2026 led-mirage
 
 以下のリンクから CoeiroClip.ZIP をダウンロードして、作成したフォルダに展開してください。
 
-https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.5
+https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.6
 
 #### 3. 実行
 
@@ -162,16 +162,16 @@ COEIROINKを自動起動するために使用します。COEIROINKの実行フ�
 
 誤認問題が解決できるのが一番いいのですが、いい方法が見つかっていないので申し訳ありませんがご了承ください。
 
-VirusTotalでのチェック結果は以下の通りです（2026/02/13 v0.2.5）
+VirusTotalでのチェック結果は以下の通りです（2026/10/24 v0.2.6）
 
-- CoeiroClip.exe … [72個中2個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/515c2c1400eaa587b3badcf44e2a2ab47f088139976378cb63f265b44d26ac99/detection)
-- CoeiroClipNC.exe … [72個中3個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/02be74b66ab461b1b55cf443346804dbba189f97c4b8a53bf1d0ac49339487fa/detection)
+- CoeiroClip.exe … [70個中2個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/19a034d9709ae702a2fda5aad1332944541805819a364400afb64a3ca6688cd3/detection)
+- CoeiroClipNC.exe … [71個中3個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/7e97cba6fae6c4aa4580de5e91706d040e3a4e9a566cec9498ce63a611d54192?nocache=1)
 
-<img src="doc/virustotal_0.2.5.png" width="600">
+<img src="doc/virustotal_0.2.6.png" width="600">
 
 ## 使用しているライブラリ
 
-### 🔖 requests 2.32.4
+### 🔖 requests 2.34.2
 
 ホームページ： https://requests.readthedocs.io/en/latest/  
 ライセンス：[Apache License 2.0](https://github.com/psf/requests/blob/main/LICENSE) 
@@ -186,7 +186,7 @@ VirusTotalでのチェック結果は以下の通りです（2026/02/13 v0.2.5�
 ホームページ： https://people.csail.mit.edu/hubert/pyaudio/  
 ライセンス：[MIT License](https://people.csail.mit.edu/hubert/pyaudio/)
 
-### 🔖 Pillow 12.1.1
+### 🔖 Pillow 13.0.0
 
 ホームページ： https://python-pillow.org/  
 ライセンス：[HPND License](https://raw.githubusercontent.com/python-pillow/Pillow/main/LICENSE)
@@ -230,3 +230,8 @@ VirusTotalでのチェック結果は以下の通りです（2026/02/13 v0.2.5�
 
 - pillowのバージョンを12.1.1に更新（CVE-2026-25990対応）
 - PyInstallerのバージョンを6.16.0に更新
+
+### 0.2.6 (2026/10/24)
+
+- pillowのバージョンを13.0.0に更新
+- requestsのバージョンを2.34.2に更新
