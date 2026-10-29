@@ -13,7 +13,7 @@ import threading
 from coeiroink_api import CoeiroinkAPI
 
 class Settings:
-    FILE_VER = 2
+    FILE_VER = 3
 
     def __init__(self, setting_file_path):
         self._setting_file_path = setting_file_path
@@ -21,21 +21,31 @@ class Settings:
         self._init_member()
 
     def _init_member(self):
-        self._speaker_id = 0
+        self._speaker_uuid = ""
+        self._speaker_style_id = 0
         self._speed_scale = 1.2
         self._pitch_scale = 0.0
         self._coeiroink_server = CoeiroinkAPI.DEFAULT_SERVER
         self._coeiroink_install_path = ""
         self._replacements = []
 
-    # 話者ID
-    def get_speaker_id(self):
+    # 話者UUIDとスタイルID
+    def get_speaker(self):
         with self._lock:
-            return self._speaker_id
+            return self._speaker_uuid, self._speaker_style_id
 
-    def set_speaker_id(self, speaker_id):
+    def set_speaker(self, speaker_uuid, speaker_style_id):
         with self._lock:
-            self._speaker_id = speaker_id
+            self._speaker_uuid = speaker_uuid
+            self._speaker_style_id = speaker_style_id
+
+    def get_speaker_uuid(self):
+        with self._lock:
+            return self._speaker_uuid
+
+    def get_speaker_style_id(self):
+        with self._lock:
+            return self._speaker_style_id
 
     # 読み上げスピード
     def get_speed_scale(self):
@@ -91,7 +101,8 @@ class Settings:
         with open(self._setting_file_path, "w", encoding="utf-8") as file:
             setting = {}
             setting["file_ver"] = Settings.FILE_VER
-            setting["speaker_id"] = self._speaker_id
+            setting["speaker_uuid"] = self._speaker_uuid
+            setting["speaker_style_id"] = self._speaker_style_id
             setting["speed_scale"] = self._speed_scale
             setting["pitch_scale"] = self._pitch_scale
             setting["coeiroink_server"] = self._coeiroink_server
@@ -110,12 +121,15 @@ class Settings:
             with open(self._setting_file_path, "r", encoding="utf-8") as file:
                 setting = json.load(file)
                 file_ver = setting.get("file_ver", 1)
-                self._speaker_id = setting.get("speaker_id", self._speaker_id)
+                needs_migration = "speaker_style_id" not in setting and "speaker_id" in setting
+                self._speaker_uuid = setting.get("speaker_uuid", self._speaker_uuid)
+                self._speaker_style_id = setting.get(
+                    "speaker_style_id", setting.get("speaker_id", self._speaker_style_id))
                 self._speed_scale = setting.get("speed_scale", self._speed_scale)
                 self._pitch_scale = setting.get("pitch_scale", self._pitch_scale)
                 self._coeiroink_server = setting.get("coeiroink_server", self._coeiroink_server)
                 self._coeiroink_install_path = setting.get("coeiroink_install_path", self._coeiroink_install_path)
                 self._replacements = setting.get("replacements", self._replacements)
 
-        if file_ver < Settings.FILE_VER:
+        if file_ver < Settings.FILE_VER or needs_migration:
             self._save_nolock()

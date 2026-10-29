@@ -1,1 +1,1 @@
-pyinstaller CoeiroClip.spec
+pyinstaller --noconfirm --clean --onefile --console --name CoeiroClip --icon image\application.ico --add-data "image;image" --version-file version_info.txt src\application.py

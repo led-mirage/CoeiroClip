@@ -1,6 +1,7 @@
 {
-    "file_ver": 2,
-    "speaker_id": 0,
+    "file_ver": 3,
+    "speaker_uuid": "3c37646f-3881-5374-2a83-149267990abc",
+    "speaker_style_id": 0,
     "speed_scale": 1.2,
     "pitch_scale": 0.0,
     "coeiroink_server": "http://127.0.0.1:50032",
