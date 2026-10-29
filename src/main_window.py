@@ -2,7 +2,7 @@
 #
 # メインウィンドウクラス
 #
-# Copyright (c) 2024 led-mirage
+# Copyright (c) 2024-2026 led-mirage
 # このソースコードは MITライセンス の下でライセンスされています。
 # ライセンスの詳細については、このプロジェクトのLICENSEファイルを参照してください。
 
@@ -20,13 +20,14 @@ import wave
 
 import pyperclip
 import pyaudio
-import requests
 from PIL import Image, ImageTk
 
 from application import Application, APP_NAME, APP_VERSION
-from coeiroink_api import CoeiroinkAPI
+from app_logging import get_logger, get_active_log_file_path
+from coeiroink_api import CoeiroinkAPI, CoeiroinkAPIError
 
 App = None
+logger = get_logger(__name__)
 
 class MainWindow:
     # コンストラクタ
@@ -42,6 +43,7 @@ class MainWindow:
         self.lock = threading.Lock()
 
         self.root = tk.Tk()
+        self.root.report_callback_exception = self.handle_tk_exception
         window_width = 256
         window_height = 124
         screen_width = self.root.winfo_screenwidth()
@@ -67,6 +69,28 @@ class MainWindow:
         self.start_button = self.create_start_button()
         self.stop_button = self.create_stop_button()
         self.repeat_button = self.create_repeat_button()
+
+    # Tkinterの例外ハンドラ（メインスレッドで動作する）
+    def handle_tk_exception(self, exc_type, exc_value, tb):
+        logger.error(
+            "Unhandled Tkinter callback exception",
+            exc_info=(exc_type, exc_value, tb),
+        )
+
+        log_file_path = get_active_log_file_path()
+        if log_file_path is not None:
+            message = (
+                "An unexpected error occurred.\n"
+                f"See the log file for details:\n\n{log_file_path}"
+            )
+        else:
+            message = (
+                "An unexpected error occurred.\n"
+                "The error details could not be logged because the log file "
+                "could not be created.\n\n"
+                f"{exc_type.__name__}: {exc_value}"
+            )
+        messagebox.showerror(APP_NAME, message, parent=self.root)
 
     # 終了処理
     def terminate(self):
@@ -96,10 +120,20 @@ class MainWindow:
     def create_speaker_combo(self):
         options = []
         current = 0
+        saved_speaker_uuid, saved_style_id = App.settings.get_speaker()
         for idx, speaker in enumerate(App.speakers):
             options.append(f"{speaker.name}（{speaker.style_name}）")
-            if speaker.id == App.settings.get_speaker_id():
+            if ((saved_speaker_uuid and
+                 speaker.speaker_uuid == saved_speaker_uuid and
+                 speaker.style_id == saved_style_id) or
+                (not saved_speaker_uuid and speaker.style_id == saved_style_id)):
                 current = idx
+
+        selected_speaker = App.speakers[current]
+        if (selected_speaker.speaker_uuid, selected_speaker.style_id) != App.settings.get_speaker():
+            App.settings.set_speaker(selected_speaker.speaker_uuid, selected_speaker.style_id)
+            App.settings.save()
+
         combo = ttk.Combobox(self.root, values=options, width=34, state="readonly")
         combo.current(current)
         combo.bind("<<ComboboxSelected>>", self.speaker_changed)
@@ -148,7 +182,8 @@ class MainWindow:
     # 話者ドロップダウンリストの変更イベントハンドラ
     def speaker_changed(self, evnet):
         current = self.speaker_combo.current()
-        App.settings.set_speaker_id(App.speakers[current].id)
+        speaker = App.speakers[current]
+        App.settings.set_speaker(speaker.speaker_uuid, speaker.style_id)
         App.settings.save()
 
     # 話速ラベルの表示を更新する
@@ -166,7 +201,9 @@ class MainWindow:
         if not self.monitoring:
             pyperclip.copy("")
             self.stop_event.clear()
-            self.monitoring_thread = threading.Thread(target=self.monitor_clipboard)
+            self.monitoring_thread = threading.Thread(
+                target=self.monitor_clipboard,
+                name="ClipboardMonitor")
             self.monitoring_thread.start()
 
             self.monitoring = True
@@ -241,6 +278,8 @@ class MainWindow:
 
     # クリップボードを監視する（ワーカースレッド）    
     def monitor_clipboard(self):
+        logger.info("Clipboard monitoring started")
+
         try:
             self.set_last_speech_text("")
             while not self.stop_event.is_set():
@@ -255,12 +294,14 @@ class MainWindow:
                     self.queue.put("speech finished")
                     print()
                 time.sleep(0.5)
-        except requests.exceptions.RequestException as err:
+        except CoeiroinkAPIError:
+            logger.exception("COEIROINK API error")
             self.queue.put("coeiroink api error")
-            print(err)
-        except Exception as err:
+        except Exception:
+            logger.exception("Clipboard monitoring failed")
             self.queue.put("unexpected error")
-            print(err)
+        else:
+            logger.info("Clipboard monitoring stopped normally")
         finally:
             self.queue.put("monitoring thread terminated")
     
@@ -272,9 +313,14 @@ class MainWindow:
         if line != "":
             sentences = line.split("。")
             for sentence in sentences:
+                sentence = sentence.strip()
+                if sentence == "":
+                    continue
+
                 if not self.stop_event.is_set():
+                    speaker_uuid, style_id = App.settings.get_speaker()
                     self.text_to_speech(
-                        sentence, App.settings.get_speaker_id(),
+                        sentence, speaker_uuid, style_id,
                         App.settings.get_speed_scale(), App.settings.get_pitch_scale())
                 else:
                     break
@@ -290,32 +336,36 @@ class MainWindow:
         return text
 
     # テキストを読み上げる
-    def text_to_speech(self, text, speaker_id, speed_scale, pitch_scale):
-        wave_data = CoeiroinkAPI.get_wave_data(speaker_id, text, speed_scale, volumeScale=0.8, pitchScale=pitch_scale)
+    def text_to_speech(self, text, speaker_uuid, style_id, speed_scale, pitch_scale):
+        wave_data = CoeiroinkAPI.get_wave_data(
+            speaker_uuid, style_id, text, speed_scale,
+            volumeScale=0.8, pitchScale=pitch_scale)
         self.play_sound(wave_data)
 
     # 音声データを再生する
     def play_sound(self, wave_data):
-        wave_file = wave.open(io.BytesIO(wave_data), 'rb')
-        audio = pyaudio.PyAudio()
+        with wave.open(io.BytesIO(wave_data), 'rb') as wave_file:
+            audio = pyaudio.PyAudio()
+            stream = None
 
-        try:
-            format = audio.get_format_from_width(wave_file.getsampwidth())
+            try:
+                format = audio.get_format_from_width(wave_file.getsampwidth())
 
-            stream = audio.open(
-                format=format,
-                channels=wave_file.getnchannels(),
-                rate=wave_file.getframerate(),
-                output=True)
+                stream = audio.open(
+                    format=format,
+                    channels=wave_file.getnchannels(),
+                    rate=wave_file.getframerate(),
+                    output=True)
 
-            data = wave_file.readframes(1024)
-            while data != b'':
-                if self.stop_event.is_set():
-                    break
-                stream.write(data)
                 data = wave_file.readframes(1024)
-            time.sleep(0.2)
-        finally:
-            stream.stop_stream()
-            stream.close()
-            audio.terminate()            
+                while data != b'':
+                    if self.stop_event.is_set():
+                        break
+                    stream.write(data)
+                    data = wave_file.readframes(1024)
+                time.sleep(0.2)
+            finally:
+                if stream is not None:
+                    stream.stop_stream()
+                    stream.close()
+                audio.terminate()

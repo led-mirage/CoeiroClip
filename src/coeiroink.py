@@ -2,7 +2,7 @@
 #
 # COEIROINK 制御用クラス
 #
-# Copyright (c) 2024 led-mirage
+# Copyright (c) 2024-2026 led-mirage
 # このソースコードは MITライセンス の下でライセンスされています。
 # ライセンスの詳細については、このプロジェクトのLICENSEファイルを参照してください。
 
@@ -10,7 +10,7 @@ import os
 import subprocess
 import time
 
-from coeiroink_api import CoeiroinkAPI
+from coeiroink_api import CoeiroinkAPI, CoeiroinkAPIError
 
 class Coeiroink:
     @staticmethod
@@ -19,7 +19,7 @@ class Coeiroink:
             if os.path.isfile(coeiroink_path):
                 subprocess.Popen(coeiroink_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 time.sleep(1)
-                while not Coeiroink.is_voicevox_running():
+                while not Coeiroink.is_coeiroink_running():
                     time.sleep(1)
                 return True
             else:
@@ -29,8 +29,8 @@ class Coeiroink:
     
     @staticmethod
     def is_coeiroink_running():
-        status = CoeiroinkAPI.get_status()
-        if status is not None:
+        try:
+            CoeiroinkAPI.get_status()
             return True
-        else:
+        except CoeiroinkAPIError:
             return False

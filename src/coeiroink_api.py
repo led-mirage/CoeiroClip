@@ -2,13 +2,16 @@
 #
 # COEIROINK APIクラス
 #
-# Copyright (c) 2024 led-mirage
+# Copyright (c) 2024-2026 led-mirage
 # このソースコードは MITライセンス の下でライセンスされています。
 # ライセンスの詳細については、このプロジェクトのLICENSEファイルを参照してください。
 
-import json
-
 import requests
+
+
+class CoeiroinkAPIError(Exception):
+    """Raised when a COEIROINK API request or response processing fails."""
+
 
 class CoeiroinkAPI:
     DEFAULT_SERVER = "http://127.0.0.1:50032"
@@ -16,95 +19,103 @@ class CoeiroinkAPI:
 
     # ステータスを取得する
     @staticmethod
-    def get_status(print_error=False) -> str:
+    def get_status() -> str:
         try:
             response = requests.get(f"{CoeiroinkAPI.server}/")
             response.raise_for_status()
-            return response.json()["status"]
+            status = response.json()["status"]
+            if not isinstance(status, str):
+                raise CoeiroinkAPIError("COEIROINK returned an invalid status")
+            return status
+        except CoeiroinkAPIError:
+            raise
         except Exception as err:
-            if print_error:
-                print(err)
-            return None
+            raise CoeiroinkAPIError("Failed to get COEIROINK status") from err
 
     # 話者リストを取得する
     @staticmethod
-    def get_speakers(print_error=False) -> {}:
+    def get_speakers() -> list[dict]:
         try:
             response = requests.get(f"{CoeiroinkAPI.server}/v1/speakers")
             response.raise_for_status()
-            return response.json()
+            speakers = response.json()
+            if not isinstance(speakers, list):
+                raise CoeiroinkAPIError("COEIROINK returned an invalid speaker list")
+            return speakers
+        except CoeiroinkAPIError:
+            raise
         except Exception as err:
-            if print_error:
-                print(err)
-            return None
-
-    # スタイルIDから話者情報を取得する
-    @staticmethod
-    def get_speaker_info(styleId: int, print_error=False) -> {}:
-        try:
-            post_params = {"styleId": styleId}
-            response = requests.post(f"{CoeiroinkAPI.server}/v1/style_id_to_speaker_meta", params=post_params)
-            response.raise_for_status()
-            return response.json()
-        except Exception as err:
-            if print_error:
-                print(err)
-            return None
+            raise CoeiroinkAPIError("Failed to get COEIROINK speakers") from err
 
     # テキストの読み上げ用データを取得する
     @staticmethod
-    def estimate_prosody(text: str, print_error=False) -> {}:
+    def estimate_prosody(text: str) -> dict:
         try:
             post_params = {"text": text}
-            response = requests.post(f"{CoeiroinkAPI.server}/v1/estimate_prosody", data=json.dumps(post_params))
+            response = requests.post(f"{CoeiroinkAPI.server}/v1/estimate_prosody", json=post_params)
             response.raise_for_status()
-            return response.json()
+            prosody = response.json()
+            if not isinstance(prosody, dict):
+                raise CoeiroinkAPIError("COEIROINK returned invalid prosody data")
+            return prosody
+        except CoeiroinkAPIError:
+            raise
         except Exception as err:
-            if print_error:
-                print(err)
-            return None
+            raise CoeiroinkAPIError("Failed to estimate COEIROINK prosody") from err
 
     # 音声データを生成する
     @staticmethod
-    def synthesis(speaker: {}, text: str, prosody: {},
+    def synthesis(speaker_uuid: str, style_id: int, text: str, prosody: dict,
                   speedScale = 1, volumeScale = 1, pitchScale = 0, intonationScale = 1,
-                  prePhonemeLength = 0.1, postPhonemeLength = 0.1, outputSamplingRate = 24000, print_error=False) -> bytes:
-        post_params = {
-            "speakerUuid": speaker["speakerUuid"],
-            "styleId": speaker["styleId"],
-            "text": text,
-            "prosodyDetail": prosody["detail"],
-            "speedScale": speedScale,
-            "volumeScale": volumeScale,
-            "pitchScale": pitchScale,
-            "intonationScale": intonationScale,
-            "prePhonemeLength": prePhonemeLength,
-            "postPhonemeLength": postPhonemeLength,
-            "outputSamplingRate": outputSamplingRate
-        }
+                  prePhonemeLength = 0.1, postPhonemeLength = 0.1, outputSamplingRate = 24000) -> bytes:
         try:
-            response = requests.post(f"{CoeiroinkAPI.server}/v1/synthesis", data=json.dumps(post_params))
-            response.raise_for_status()
-            return response.content
+            post_params = {
+                "speakerUuid": speaker_uuid,
+                "styleId": style_id,
+                "text": text,
+                "prosodyDetail": prosody["detail"],
+                "speedScale": speedScale,
+                "volumeScale": volumeScale,
+                "pitchScale": pitchScale,
+                "intonationScale": intonationScale,
+                "prePhonemeLength": prePhonemeLength,
+                "postPhonemeLength": postPhonemeLength,
+                "outputSamplingRate": outputSamplingRate
+            }
+            response = requests.post(f"{CoeiroinkAPI.server}/v1/synthesis", json=post_params)
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError as err:
+                response_detail = response.text.strip()
+                if response_detail:
+                    message = (
+                        f"COEIROINK synthesis returned HTTP {response.status_code}: "
+                        f"{response_detail}"
+                    )
+                else:
+                    message = f"COEIROINK synthesis returned HTTP {response.status_code}"
+                raise CoeiroinkAPIError(message) from err
+            wave_data = response.content
+            if not wave_data:
+                raise CoeiroinkAPIError("COEIROINK returned empty audio data")
+            return wave_data
+        except CoeiroinkAPIError:
+            raise
         except Exception as err:
-            if print_error:
-                print(err)
-            return None
+            raise CoeiroinkAPIError("Failed to synthesize COEIROINK audio") from err
 
     # 音声データを生成する
     @staticmethod
-    def get_wave_data(styleId: int, text: str,
+    def get_wave_data(speaker_uuid: str, style_id: int, text: str,
                       speedScale = 1, volumeScale = 1, pitchScale = 0, intonationScale = 1,
-                      prePhonemeLength = 0.1, postPhonemeLength = 0.1, outputSamplingRate = 24000, print_error=False) -> bytes:
+                      prePhonemeLength = 0.1, postPhonemeLength = 0.1, outputSamplingRate = 24000) -> bytes:
+        try:
+            prosody = CoeiroinkAPI.estimate_prosody(text)
 
-        speaker = CoeiroinkAPI.get_speaker_info(styleId)
-        if speaker is None:
-            return None
-        
-        prosody = CoeiroinkAPI.estimate_prosody(text)
-        if prosody is None:
-            return None
-        
-        return CoeiroinkAPI.synthesis(speaker, text, prosody,
-                                      speedScale, volumeScale, pitchScale, intonationScale,
-                                      prePhonemeLength, postPhonemeLength, outputSamplingRate, print_error)
+            return CoeiroinkAPI.synthesis(speaker_uuid, style_id, text, prosody,
+                                          speedScale, volumeScale, pitchScale, intonationScale,
+                                          prePhonemeLength, postPhonemeLength, outputSamplingRate)
+        except CoeiroinkAPIError:
+            raise
+        except Exception as err:
+            raise CoeiroinkAPIError("Failed to get COEIROINK audio data") from err

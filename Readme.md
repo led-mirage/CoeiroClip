@@ -24,12 +24,13 @@ Copyright (c) 2024-2026 led-mirage
 - キャラクター選択
 - リピート
 - 設定値の自動保存
+- エラーログの記録
 
 ## 動作確認環境
 
 - Windows 11 Pro 25H2
-- Python 3.12.0
-- COEIROINK v2.3.4
+- Python 3.13.17
+- COEIROINK v2.13.0
 
 ## 実行方法
 
@@ -41,9 +42,9 @@ Copyright (c) 2024-2026 led-mirage
 
 #### 2. アプリのダウンロード
 
-以下のリンクから CoeiroClip.ZIP をダウンロードして、作成したフォルダに展開してください。
+以下のリンクからZIPファイルをダウンロードして、作成したフォルダに展開してください。
 
-https://github.com/led-mirage/CoeiroClip/releases/tag/v0.2.6
+https://github.com/led-mirage/CoeiroClip/releases/tag/v0.3.0
 
 #### 3. 実行
 
@@ -69,12 +70,14 @@ ZIPファイルをダウンロードして作成したフォルダに展開し�
 git clone https://github.com/led-mirage/CoeiroClip.git
 ```
 
-#### 4. ライブラリのインストール
+#### 4. 仮想環境とライブラリのインストール
 
-以下のコマンドを実行して必要なライブラリをインストールします。
+以下のコマンドを実行して仮想環境を作成し、必要なライブラリをインストールします。
 
-```bash
-pip install -r requirements.txt
+```bat
+python -m venv venv
+call venv\Scripts\activate
+python -m pip install -r requirements.txt
 ```
 
 #### 5. 実行
@@ -96,7 +99,7 @@ start pythonw src\application.py
 Pythonの仮想環境を使用している場合は、以下の例のようにすればOKです。
 
 ```bat
-call venv\scripts\activate
+call venv\Scripts\activate
 start pythonw src\application.py
 ```
 
@@ -109,9 +112,13 @@ start pythonw src\application.py
 ※プログラム引数で設定ファイル名を渡すことで、使用する設定ファイルを切り替えることができます。  
 例）CoeiroClip --setting my_settings.json
 
-#### ✨ speaker_id（既定値 0）
+#### ✨ speaker_uuid（既定値 空文字列）
 
-COEIROINKのキャラクターのStyleIdを記載します。アプリのGUIで設定できます。
+COEIROINKの話者を識別するSpeakerUuidです。アプリのGUIで設定できます。
+
+#### ✨ speaker_style_id（既定値 0）
+
+COEIROINKの話者のStyleIdです。`speaker_uuid`との組み合わせで話者とスタイルを特定します。アプリのGUIで設定できます。
 
 #### ✨ speed_scale（既定値 1.2）
 
@@ -152,6 +159,12 @@ COEIROINKを自動起動するために使用します。COEIROINKの実行フ�
     ]
 ```
 
+## ログ
+
+アプリの起動・終了や予期しないエラーは、実行ファイルと同じフォルダの `logs\CoeiroClip.log` に記録されます。Pythonで実行した場合は、プロジェクトフォルダの `logs\CoeiroClip.log` に記録されます。
+
+ログファイルは1MBごとにローテーションされ、過去3世代まで保存されます。
+
 ## 注意事項
 
 ### ⚡ ウィルス対策ソフトの誤認問題
@@ -162,12 +175,12 @@ COEIROINKを自動起動するために使用します。COEIROINKの実行フ�
 
 誤認問題が解決できるのが一番いいのですが、いい方法が見つかっていないので申し訳ありませんがご了承ください。
 
-VirusTotalでのチェック結果は以下の通りです（2026/10/24 v0.2.6）
+VirusTotalでのチェック結果は以下の通りです（2026/10/29 v0.3.0）
 
-- CoeiroClip.exe … [70個中2個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/19a034d9709ae702a2fda5aad1332944541805819a364400afb64a3ca6688cd3/detection)
-- CoeiroClipNC.exe … [71個中3個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/7e97cba6fae6c4aa4580de5e91706d040e3a4e9a566cec9498ce63a611d54192?nocache=1)
+- CoeiroClip.exe … [70個中1個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/544758968e9dd4dbf180b70913a7c7cc2283c1a3a1dd6511278822c1136e0651/detection)
+- CoeiroClipNC.exe … [70個中2個のアンチウィルスエンジンで検出](https://www.virustotal.com/gui/file/4a951614487e5cc2dd2c99fca97ab1bd3f2fffd46b4df934fc3a47cf48f5433d/detection)
 
-<img src="doc/virustotal_0.2.6.png" width="600">
+<img src="doc/virustotal_0.3.0.png" width="600">
 
 ## 使用しているライブラリ
 
@@ -176,7 +189,7 @@ VirusTotalでのチェック結果は以下の通りです（2026/10/24 v0.2.6�
 ホームページ： https://requests.readthedocs.io/en/latest/  
 ライセンス：[Apache License 2.0](https://github.com/psf/requests/blob/main/LICENSE) 
 
-### 🔖 pyperclip 1.8.2 
+### 🔖 pyperclip 1.11.0
 
 ホームページ： https://github.com/asweigart/pyperclip/tree/master  
 ライセンス：[BSD 3-Clause "New" or "Revised" License](https://github.com/asweigart/pyperclip/blob/master/LICENSE.txt)
@@ -189,7 +202,7 @@ VirusTotalでのチェック結果は以下の通りです（2026/10/24 v0.2.6�
 ### 🔖 Pillow 13.0.0
 
 ホームページ： https://python-pillow.org/  
-ライセンス：[HPND License](https://raw.githubusercontent.com/python-pillow/Pillow/main/LICENSE)
+ライセンス：[MIT-CMU License](https://raw.githubusercontent.com/python-pillow/Pillow/main/LICENSE)
 
 ## ライセンス
 
@@ -235,3 +248,16 @@ VirusTotalでのチェック結果は以下の通りです（2026/10/24 v0.2.6�
 
 - pillowのバージョンを13.0.0に更新
 - requestsのバージョンを2.34.2に更新
+
+### 0.3.0 (2026/10/29)
+
+- Pythonのバージョンを3.13.17に更新
+- pyperclipのバージョンを1.11.0に更新
+- ローテーション付きのログ出力機能を追加
+- 予期しないエラーのログ記録とエラー通知を追加
+- COEIROINK APIのエラー処理を改善
+- COEIROINKの話者をSpeakerUuidとStyleIdの組み合わせで識別するように変更
+- COEIROINK APIへのPOSTリクエストをJSON形式に変更
+- COEIROINK v2.13.0に対応
+- COEIROINKの自動起動処理を修正
+- 音声デバイスの初期化に失敗した際の例外処理を修正
